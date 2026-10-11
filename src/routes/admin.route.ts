@@ -216,6 +216,12 @@ router.patch(
 router.get('/settings', requirePermission('settings'), (req, res, next) =>
   adminController.getSettings(req, res, next)
 );
+router.patch(
+  '/settings',
+  requirePermission('settings'),
+  validate({ body: updateSettingsSchema }),
+  (req, res, next) => adminController.updateSettings(req, res, next)
+);
 router.put(
   '/settings',
   requirePermission('settings'),
