@@ -14,6 +14,7 @@ import { toAdminDetail, toAdminSummary, upsertBodyToRow } from '../utils/item-ma
 import { appendTimeline, toAdminOrderDetail, toAdminOrderSummary } from '../utils/order-mapper.util.js';
 import { depositWasReceived } from '../utils/deposit-status.util.js';
 import { emptyBatchStats, toBatchSummary } from '../utils/batch-mapper.util.js';
+import { toShopSettings, toDbSettingsUpdate } from '../utils/setting-mapper.util.js';
 import type { CashFlowPeriod } from '../utils/cash-flow.util.js';
 import { emailService } from './email.service.js';
 import { uploadService } from './upload.service.js';
@@ -1317,11 +1318,14 @@ export class AdminService {
   }
 
   async getSettings() {
-    return await settingRepository.getSettings();
+    const raw = await settingRepository.getSettings();
+    return toShopSettings(raw);
   }
 
   async updateSettings(data: any) {
-    return await settingRepository.updateSettings(data);
+    const dbData = toDbSettingsUpdate(data);
+    const updated = await settingRepository.updateSettings(dbData);
+    return toShopSettings(updated);
   }
 }
 

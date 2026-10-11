@@ -1,4 +1,5 @@
 import { settingRepository } from '../repositories/setting.repository.js';
+import { toShopSettings, toDbSettingsUpdate } from '../utils/setting-mapper.util.js';
 
 export class SettingService {
   async getPublicSettings() {
@@ -23,11 +24,14 @@ export class SettingService {
   }
 
   async getAllSettings() {
-    return await settingRepository.getSettings();
+    const s = await settingRepository.getSettings();
+    return toShopSettings(s);
   }
 
   async updateSettings(data: any) {
-    return await settingRepository.updateSettings(data);
+    const dbData = toDbSettingsUpdate(data);
+    const updated = await settingRepository.updateSettings(dbData);
+    return toShopSettings(updated);
   }
 }
 
